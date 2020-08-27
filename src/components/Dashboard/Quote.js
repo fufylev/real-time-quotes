@@ -4,13 +4,15 @@ import PropTypes from 'prop-types'
 import AppTextBold from '../custom_ui/AppTextBold'
 import Colors from "../../utils/Colors";
 
-const Quote = ({quote, onOpen}) => {
+const Quote = ({ quote, onOpen }) => {
   return (
     <TouchableOpacity onPress={() => {
+      console.log("KKKKK666", quote);
+
       onOpen(quote)
     }}>
       <View style={styles.quote}>
-        <AppTextBold style={{fontSize: 26}}>{quote.symbol}</AppTextBold>
+        <AppTextBold style={{ fontSize: 26 }}>{quote.symbol}</AppTextBold>
       </View>
     </TouchableOpacity>
   )

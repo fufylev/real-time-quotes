@@ -3,11 +3,14 @@ import { Dimensions, ScrollView, StyleSheet, Text, View, YellowBox } from 'react
 import io from "socket.io-client";
 import { RealTimeQuotesContext } from "../../context/Quotes/RealTimeQuotesContext";
 import QuoteView from "./QuoteView";
+import { observer, inject } from "mobx-react";
 
-const Quotes = () => {
+const Quotes = (props) => {
+  const { quotes } = props;
+  console.log("quotes", quotes);
+
   const {
-    setData, EURUSD, GBPUSD, USDJPY, USDCHF, USDCAD, AUDUSD, GOLD,
-    AUDCAD, GBPCHF, GBPCAD, USDRUR, NZDDKK, AUDHKD
+    setData
   } = useContext(RealTimeQuotesContext);
   const [deviceWidth, setDeviceWidth] = useState(Dimensions.get('window').width - 20);
 
@@ -59,28 +62,21 @@ const Quotes = () => {
   });
 
   return (
+
     <View style={styles.container}>
-        <View style={styles.tableName}>
-          <Text style={{...styles.common, ...styles.bold, width: deviceWidth * 0.24 - 10, textAlign: 'left'}}> Pair </Text>
-          <Text style={{...styles.common, ...styles.bold, width: deviceWidth * 0.25 - 10}}> Bid </Text>
-          <Text style={{...styles.common, ...styles.bold, width: deviceWidth * 0.25 - 10}}> Change </Text>
-          <Text style={{...styles.common, ...styles.bold, width: deviceWidth * 0.21 - 10}}> % </Text>
-          <Text style={{width: deviceWidth * 0.03}}/>
-        </View>
+      <View style={styles.tableName}>
+        <Text style={{ ...styles.common, ...styles.bold, width: deviceWidth * 0.24 - 10, textAlign: 'left' }}> Pair </Text>
+        <Text style={{ ...styles.common, ...styles.bold, width: deviceWidth * 0.25 - 10 }}> Bid </Text>
+        <Text style={{ ...styles.common, ...styles.bold, width: deviceWidth * 0.25 - 10 }}> Change </Text>
+        <Text style={{ ...styles.common, ...styles.bold, width: deviceWidth * 0.21 - 10 }}> % </Text>
+        <Text style={{ width: deviceWidth * 0.03 }} />
+      </View>
       <ScrollView>
-        <QuoteView currency={GOLD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={USDRUR} deviceWidth={deviceWidth}/>
-        <QuoteView currency={EURUSD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={GBPUSD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={USDJPY} deviceWidth={deviceWidth}/>
-        <QuoteView currency={USDCHF} deviceWidth={deviceWidth}/>
-        <QuoteView currency={USDCAD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={AUDUSD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={AUDCAD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={GBPCHF} deviceWidth={deviceWidth}/>
-        <QuoteView currency={GBPCAD} deviceWidth={deviceWidth}/>
-        <QuoteView currency={NZDDKK} deviceWidth={deviceWidth}/>
-        <QuoteView currency={AUDHKD} deviceWidth={deviceWidth}/>
+        {quotes.quotesList.length !== 0
+          ? quotes.quotesList.map((e, i) => (
+            <QuoteView key={i} currency={e} deviceWidth={deviceWidth} />
+          ))
+          : null}
       </ScrollView>
     </View>
   )
@@ -118,4 +114,5 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Quotes;
+export default inject("quotes")(observer(Quotes));
+// export default Quotes;
