@@ -4,6 +4,9 @@ import { AppLoading } from 'expo';
 import { RealTimeQuotesState } from "./src/context/Quotes/RealTimeQuotesState";
 import Navigation from "./src/navigation/Navigation";
 import PairInfoState from "./src/context/PairInfo/PairInfoState";
+import { Provider } from 'mobx-react'
+import { store } from './src/modles'
+
 
 async function loadApp() {
   await Font.loadAsync({
@@ -24,10 +27,12 @@ export default function App() {
   }
 
   return (
-    <RealTimeQuotesState>
-      <PairInfoState>
-        <Navigation/>
-      </PairInfoState>
-    </RealTimeQuotesState>
+    <Provider {...store}>
+      <RealTimeQuotesState>
+        <PairInfoState>
+          <Navigation />
+        </PairInfoState>
+      </RealTimeQuotesState>
+    </Provider>
   );
 }
