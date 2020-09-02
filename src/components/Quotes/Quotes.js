@@ -9,9 +9,7 @@ const Quotes = (props) => {
   const { quotes } = props;
   console.log("quotes", quotes);
 
-  const {
-    setData
-  } = useContext(RealTimeQuotesContext);
+
   const [deviceWidth, setDeviceWidth] = useState(Dimensions.get('window').width - 20);
 
   YellowBox.ignoreWarnings(['Remote debugger']);
@@ -33,7 +31,6 @@ const Quotes = (props) => {
     });
 
     socket.on('quotes', (data) => {
-      setData(data.msg)
     });
 
     YellowBox.ignoreWarnings([

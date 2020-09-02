@@ -1,4 +1,4 @@
-import { types, flow, getSnapshot } from 'mobx-state-tree';
+import { types, flow, getSnapshot, getRoot } from 'mobx-state-tree';
 import { QuoteItem } from './QuoteItem'
 import { remove } from 'mobx';
 import axios from 'axios'
@@ -8,12 +8,15 @@ export const QuoteItemList = types.model("QuoteItemList", {
     quoteItemMainList: types.optional(types.array(QuoteItem), []),
     quoteItemList: types.optional(types.array(QuoteItem), []),
     firstIndex: types.optional(types.number, 0),
+    loading: types.optional(types.boolean, false),
+    error: types.optional(types.boolean, false)
 
 })
 
     .actions((self) => ({
         quoteListApiCall() {
-            console.log("KKKKKKK", self);
+
+            console.log("KKKKmmm", getRoot(self).SingleQuote);
             self.quoteItemList = []
             self.fetchQuoteList()
 
@@ -25,14 +28,12 @@ export const QuoteItemList = types.model("QuoteItemList", {
                 const quotes = response.data.quotesList.sort((a, b) => a.symbol > b.symbol ? 1 : -1);
                 self.quoteItemMainList = quotes
                 // self.quoteItemList = quotes.slice(0, 5)
-                console.log("KKKKKQue", quotes);
+
                 self.quoteSlice(0, 5)
-
-
-
+                self.loading = true
 
             } catch (e) {
-
+                self.error = true
                 console.log('Error', e);
             }
         }),
@@ -41,7 +42,7 @@ export const QuoteItemList = types.model("QuoteItemList", {
             let quotes = self.quoteItemMainList
             self.quoteItemList = getSnapshot(self.quoteItemMainList).slice(firstIndex, lastIndex)
             self.firstIndex = firstIndex
-            console.log("KKKKKQue555", self.quoteItemList);
+
 
         }),
         pagination(text) {

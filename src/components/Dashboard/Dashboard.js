@@ -22,19 +22,7 @@ import { observer, inject } from "mobx-react";
 import { getSnapshot } from 'mobx-state-tree';
 
 const Dashboard = (props, { navigation }) => {
-  const {
 
-    fetchQuotes,
-    quotes,
-    quotesFiltered,
-    filterQuotes,
-    loading,
-    error,
-    paginate,
-    startIndex,
-    lastIndex,
-    init
-  } = useContext(PairInfoContext);
 
   const [quoteData, setQuoteData] = useState(null)
   const [firstIndex, setfirstIndex] = useState(0)
@@ -47,9 +35,10 @@ const Dashboard = (props, { navigation }) => {
   const loadQuotes = useCallback(async () => {
     const height = Math.round(Dimensions.get('window').height);
     const itemsPerPage = Math.floor((height - 340) / 72)
-    await init({ startIndex: 0, lastIndex: itemsPerPage, itemsNumber: itemsPerPage });
-    await fetchQuotes();
-  }, [fetchQuotes]);
+    // await init({ startIndex: 0, lastIndex: itemsPerPage, itemsNumber: itemsPerPage });
+    // await fetchQuotes();
+    await props.quoteItemList.quoteListApiCall();
+  });
 
   useEffect(() => {
     console.log("KKKKKYYY", props);
@@ -65,7 +54,7 @@ const Dashboard = (props, { navigation }) => {
       setDeviceHeight(height);
       const itemsPerPage = Math.floor((height - 340) / 72)
       setItemsNumber(itemsPerPage)
-      init(itemsPerPage)
+      // init(itemsPerPage)
     };
 
     Dimensions.addEventListener('change', update);
@@ -78,7 +67,7 @@ const Dashboard = (props, { navigation }) => {
   useEffect(() => {
 
 
-    loadQuotes();
+    // loadQuotes();
     // props.quoteItemList.quoteListApiCall()
   }, []);
   useEffect(() => {
@@ -102,20 +91,20 @@ const Dashboard = (props, { navigation }) => {
     return unsubscribe;
   }, [props.navigation]);
 
-  useEffect(() => {
-    if (value.length > 0) {
-      filterQuotes(value)
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   if (value.length > 0) {
+  //     filterQuotes(value)
+  //   }
+  // }, [value]);
 
-  if (loading) {
+  if (!props.quoteItemList.loading) {
     return <AppLoader />;
   }
 
-  if (error) {
+  if (props.quoteItemList.error) {
     return (
       <View style={styles.center}>
-        <AppText style={styles.error}>{error}</AppText>
+        <AppText style={styles.error}>"No Internet"</AppText>
         <AppButton onPress={loadQuotes}>Try again</AppButton>
       </View>
     );
@@ -124,8 +113,8 @@ const Dashboard = (props, { navigation }) => {
   const showPairInfo = (quote) => {
     props.navigation.navigate('PairInfoQuotes', { quoteParams: quote, title: quote.symbol })
   };
-  console.log("KKKKKDash11", quotesFiltered);
-  console.log("KKKKKDash44", props);
+  console.log("kkkkmmmmm", props);
+
   let content = (
 
     <View style={{ ...styles.quotes, width: deviceWidth, height: deviceHeight - 330 }}>
@@ -133,7 +122,7 @@ const Dashboard = (props, { navigation }) => {
       <FlatList
         keyExtractor={item => item.symbol}
         data={quoteData}
-        renderItem={({ item }) => <Quote quote={item} onOpen={showPairInfo} init={init} />}
+        renderItem={({ item }) => <Quote quote={item} onOpen={showPairInfo} />}
       />
     </View>
   );

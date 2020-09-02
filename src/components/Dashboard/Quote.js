@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 Quote.propTypes = {
   quote: PropTypes.object,
   onOpen: PropTypes.func,
-  init: PropTypes.func
+  // init: PropTypes.func
 }
 
 export default Quote

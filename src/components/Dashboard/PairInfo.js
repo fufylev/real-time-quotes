@@ -13,14 +13,14 @@ const PairInfo = (props, { route, navigation }) => {
   console.log("KKKKKPairInfo", props);
   const { quoteParams } = props.route.params;
   const quoteId = quoteParams.symbol;
-  const { quote, fetchQuote } = useContext(PairInfoContext);
+
   const [quoteData, setQuoteData] = useState(null)
 
   const loadQuote = useCallback(async () => {
-    await fetchQuote(quoteId);
+    // await fetchQuote(quoteId);
     await props.singleQuote.fetchSingleQuote(quoteId)
 
-  }, [fetchQuote]);
+  }, []);
 
   useEffect(() => {
     loadQuote();
@@ -29,7 +29,7 @@ const PairInfo = (props, { route, navigation }) => {
 
 
     setQuoteData(getSnapshot(props.singleQuote.singleQuote)[0])
-    console.log("KKKKKPairInfo555", props.singleQuote.singleQuote);
+
   }, [props]);
   console.log("KKKKKPairInfoEnd", quoteData);
   return (
